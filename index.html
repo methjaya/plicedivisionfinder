@@ -1,1 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sri Lanka Police Division Finder for Ammi</title>
+    
+    <!-- Tailwind CSS for modern layouts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for crisp English and Sinhala typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Sinhala:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for clean vector icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Sinhala', 'sans-serif'],
+                    },
+                    colors: {
+                        policeBlue: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            200: '#b9defe',
+                            600: '#2563eb',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        warmWarmth: {
+                            50: '#fdfbf7',
+                            100: '#fcf8f2',
+                            200: '#f5ebe0',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Sinhala', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Custom smooth scroll bar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* CSS Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800 transition-all duration-300">
+
+    <script>
+        // Database of all 45 Sri Lankan Police Divisions with Districts, Provinces, and constituent stations
+        const policeDivisions = [
+            {
+                id: 1,
+                nameEn: "Colombo Central",
+                nameSi: "කොළඹ මධ්‍යම",
+                districtEn: "Colombo",
+                districtSi: "කොළඹ",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Pettah", "Keselwatta", "Dam Street", "Wolfendhal Street", "Fort", "Slave Island", "Maradana", "Maligawatta"],
+                stationsSi: ["පිටකොටුව", "කෙසෙල්වත්ත", "වේල්ල වීදිය", "වොල්ෆෙන්ඩල් වීදිය", "කොටුව", "කොම්පඤ්ඤවීදිය", "මරදාන", "මාලිගාවත්ත"]
+            },
+            {
+                id: 2,
+                nameEn: "Colombo North",
+                nameSi: "කොළඹ උතුර",
+                districtEn: "Colombo",
+                districtSi: "කොළඹ",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Colombo Harbour", "Foreshore", "Modara", "Kotahena", "Mattakkuliya", "Bloemendhal", "Grandpass", "Dematagoda"],
+                stationsSi: ["කොළඹ වරාය", "වෙරළබඩ", "මෝදර", "කොටහේන", "මට්ටක්කුලිය", "බ්ලූමැන්ඩල්", "ග්‍රෑන්ඩ්පාස්", "දෙමටගොඩ"]
+            },
+            {
+                id: 3,
+                nameEn: "Colombo South",
+                nameSi: "කොළඹ දකුණ",
+                districtEn: "Colombo",
+                districtSi: "කොළඹ",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Kollupitiya", "Bambalapitiya", "Kirulapone", "Wellawatta", "Narahenpita", "BMICH", "Borella", "Cinnamon Gardens"],
+                stationsSi: ["කොල්ලුපිටිය", "බම්බලපිටිය", "කිරුළපන", "වැල්ලවත්ත", "නාරාහේන්පිට", "BMICH", "බොරැල්ල", "කුරුඳු වත්ත"]
+            },
+            {
+                id: 4,
+                nameEn: "Nugegoda",
+                nameSi: "නුගේගොඩ",
+                districtEn: "Colombo",
+                districtSi: "කොළඹ",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Mirihana", "Maharagama", "Boralesgamuwa", "Wellampitiya", "Thalangama", "Welikada", "Nawagamuwa", "Mulleriyawa", "Homagama", "Kottawa", "Athurugiriya", "Padukka", "Hanwella", "Gothatuwa", "Meepe"],
+                stationsSi: ["මිරිහාන", "මහාරගම", "බොරලැස්ගමුව", "වැල්ලම්පිටිය", "තලංගම", "වැලි කඩ", "නාවගමුව", "මුල්ලේරියාව", "හෝමාගම", "කොට්ටාව", "අතුරුගිරිය", "පදුක්ක", "හංවැල්ල", "ගෝතටුව", "මීපේ"]
+            },
+            {
+                id: 5,
+                nameEn: "Mount Lavinia",
+                nameSi: "ගල්කිස්ස",
+                districtEn: "Colombo",
+                districtSi: "කොළඹ",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Mount Lavinia", "Dehiwala", "Moratuwa", "Egoda Uyana", "Angulana", "Kohuwala", "Borupana", "Piliyandala", "Kahathuduwa", "Kesbewa", "Moratumulla"],
+                stationsSi: ["ගල්කිස්ස", "දෙහිවල", "මොරටුව", "එගොඩඋයන", "අඟුලාන", "කොහුවල", "බෝරුපන", "පිළියන්දල", "කහතුඩුව", "කැස්බෑව", "මොරටුමුල්ල"]
+            },
+            {
+                id: 6,
+                nameEn: "Kelaniya",
+                nameSi: "කැලණිය",
+                districtEn: "Gampaha",
+                districtSi: "ගම්පහ",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Peliyagoda", "Kelaniya", "Kandana", "Wattala", "Mahabage", "Sapugaskanda", "Biyagama", "Meegahawatta", "Ja-Ela", "Ragama", "Kiribathgoda", "Kadawatha"],
+                stationsSi: ["පෑලියගොඩ", "කැලණිය", "කඳාන", "වත්තල", "මහබාගේ", "සපුගස්කන්ද", "බියගම", "මීගහවත්ත", "ජා-ඇල", "රාගම", "කිරිිබත්ගොඩ", "කඩවත"]
+            },
+            {
+                id: 7,
+                nameEn: "Gampaha",
+                nameSi: "ගම්පහ",
+                districtEn: "Gampaha",
+                districtSi: "ගම්පහ",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Gampaha", "Minuwangoda", "Kirindiwela", "Dompe", "Pugoda", "Bemmulla", "Nittambuwa", "Veyangoda", "Mirigama", "Pallewela", "Yakkala", "Malwathuhiripitiya"],
+                stationsSi: ["ගම්පහ", "මිනුවන්ගොඩ", "කිරිඳිවැල", "දොම්පේ", "පූගොඩ", "බෙම්මුල්ල", "නිට්ටඹුව", "වේයන්ගොඩ", "මීරිගම", "පල්ලේවෙල", "යක්කල", "මල්වතුහිරිපිටිය"]
+            },
+            {
+                id: 8,
+                nameEn: "Negombo",
+                nameSi: "මීගමුව",
+                districtEn: "Gampaha",
+                districtSi: "ගම්පහ",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Negombo", "Kochchikade", "Pamunugama", "Kotadeniyawa", "Diulapitiya", "Seeduwa", "Raddolugama", "Katunayake", "Katana", "Dungalpitiya"],
+                stationsSi: ["මීගමුව", "කොච්චිකඩේ", "පමුණුගම", "කොටදෙනියාව", "දිවුලපිටිය", "සීදුව", "රද්දොළුගම", "කටුනායක", "කටාන", "දුංගල්පිටිය"]
+            },
+            {
+                id: 9,
+                nameEn: "Kalutara",
+                nameSi: "කළුතර",
+                districtEn: "Kalutara",
+                districtSi: "කළුතර",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Kalutara North", "Kalutara South", "Katukurunda", "Payagala", "Maggona", "Beruwala", "Aluthgama", "Dodangoda", "Meegahathenna", "Welipenna", "Matugama", "Agalawatta", "Baduraliya", "Ittapana"],
+                stationsSi: ["උතුරු කළුතර", "දකුණු කළුතර", "කටුකුරුන්ද", "පායගල", "මග්ගෝන", "බේරුවල", "අළුත්ගම", "දොඩංගොඩ", "මීගහතැන්න", "වැලිපැන්න", "මතුගම", "අගලවත්ත", "බදුරලිය", "ඉත්තෑපාන"]
+            },
+            {
+                id: 10,
+                nameEn: "Panadura",
+                nameSi: "පානදුර",
+                districtEn: "Kalutara",
+                districtSi: "කළුතර",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Panadura South", "Panadura North", "Wadduwa", "Bandaragama", "Anguruwatota", "Millaniya", "Horana", "Ingiriya", "Moragahahena", "Moronthuduwa"],
+                stationsSi: ["දකුණු පානදුර", "උතුරු පානදුර", "වද්දුව", "බණ්ඩාරගම", "අඟුරුවාතොට", "මිල්ලනිය", "හොරණ", "ඉංගිරිය", "මොරගහහේන", "මොරන්තුඩුව"]
+            },
+            {
+                id: 11,
+                nameEn: "Kandy",
+                nameSi: "මහනුවර",
+                districtEn: "Kandy",
+                districtSi: "මහනුවර",
+                provinceEn: "Central",
+                provinceSi: "මධ්‍යම",
+                stationsEn: ["Kandy", "Dalada Maligawa", "Katugastota", "Ankumbura", "Galagedara", "Hatharaliyadda", "Thalathuoya", "Hanguranketha", "Pallekele", "Peradeniya", "Daulagala", "Kadugannawa", "Alawathugoda", "Welambada", "Poojapitiya"],
+                stationsSi: ["මහනුවර", "දළදා මාළිගාව", "කටුගස්තොට", "අංකුඹුර", "ගලගෙදර", "හතරලියද්ද", "තලාතුඔය", "හඟුරන්කේත", "පල්ලේකැලේ", "පේරාදෙණිය", "දවුලගල", "කඩුගන්නාව", "අලවතුගොඩ", "වෙලම්බඩ", "පූජාපිටිය"]
+            },
+            {
+                id: 12,
+                nameEn: "Gampola",
+                nameSi: "ගම්පොළ",
+                districtEn: "Kandy",
+                districtSi: "මහනුවර",
+                provinceEn: "Central",
+                provinceSi: "මධ්‍යම",
+                stationsEn: ["Gampola", "Nawalapitiya", "Ginigathena", "Pussellawa", "Kothmale", "Gelioya"],
+                stationsSi: ["ගම්පොළ", "නාවලපිටිය", "ගිනිගත්හේන", "පුස්සැල්ලාව", "කොත්මලේ", "ගෙලිඔය"]
+            },
+            {
+                id: 13,
+                nameEn: "Teldeniya",
+                nameSi: "තෙල්දෙණිය",
+                districtEn: "Kandy",
+                districtSi: "මහනුවර",
+                provinceEn: "Central",
+                provinceSi: "මධ්‍යම",
+                stationsEn: ["Teldeniya", "Wattegama", "Panwila", "Rangala", "Hasalaka", "Ududumbara", "Medamahanuwara"],
+                stationsSi: ["තෙල්දෙණිය", "වත්තේගම", "පන්විල", "රංගල", "හසලක", "උඩුදුම්බර", "මැදමහනුවර"]
+            },
+            {
+                id: 14,
+                nameEn: "Matale",
+                nameSi: "මාතලේ",
+                districtEn: "Matale",
+                districtSi: "මාතලේ",
+                provinceEn: "Central",
+                provinceSi: "මධ්‍යම",
+                stationsEn: ["Matale", "Rattota", "Yatawatta", "Dambulla", "Sigiriya", "Galewela", "Naula", "Laggala", "Wilgamuwa"],
+                stationsSi: ["මාතලේ", "රත්තොට", "යටවත්ත", "දඹුල්ල", "සීගිරිය", "ගලේවෙල", "නාඋල", "ලග්ගල", "විල්ගමුව"]
+            },
+            {
+                id: 15,
+                nameEn: "Nuwara Eliya",
+                nameSi: "නුවරඑළිය",
+                districtEn: "Nuwara Eliya",
+                districtSi: "නුවරඑළිය",
+                provinceEn: "Central",
+                provinceSi: "මධ්‍යම",
+                stationsEn: ["Nuwara Eliya", "Kandapola", "Nanuoya", "Talawakele", "Lindula", "Agarapatana"],
+                stationsSi: ["නුවරඑළිය", "කඳපොල", "නානුඔය", "තලවකැලේ", "ලින්දුල", "අගරපතන"]
+            },
+            {
+                id: 16,
+                nameEn: "Hatton",
+                nameSi: "හැටන්",
+                districtEn: "Nuwara Eliya",
+                districtSi: "නුවරඑළිය",
+                provinceEn: "Central",
+                provinceSi: "මධ්‍යම",
+                stationsEn: ["Hatton", "Dickoya", "Norwood", "Maskeliya", "Bogawantalawa", "Ambagamuwa"],
+                stationsSi: ["හැටන්", "දික්ඔය", "නෝවුඩ්", "මස්කෙළිය", "බෝගවන්තලාව", "අඹගමුව"]
+            },
+            {
+                id: 17,
+                nameEn: "Galle",
+                nameSi: "ගාල්ල",
+                districtEn: "Galle",
+                districtSi: "ගාල්ල",
+                provinceEn: "Southern",
+                provinceSi: "දකුණ",
+                stationsEn: ["Galle", "Akmeemana", "Habaraduwa", "Hikkaduwa", "Rathgama", "Podgala", "Imaduwa", "Ahangama"],
+                stationsSi: ["ගාල්ල", "අක්මීමන", "හබරාදුව", "හික්කඩුව", "රත්ගම", "පෝද්දල", "ඉමදුව", "අහංගම"]
+            },
+            {
+                id: 18,
+                nameEn: "Elpitiya",
+                nameSi: "ඇල්පිටිය",
+                districtEn: "Galle",
+                districtSi: "ගාල්ල",
+                provinceEn: "Southern",
+                provinceSi: "දකුණ",
+                stationsEn: ["Elpitiya", "Karandeniya", "Bentota", "Kosgoda", "Ambalangoda", "Meetiyagoda", "Ahungalla", "Uragasmanhandiya"],
+                stationsSi: ["ඇල්පිටිය", "කරන්දෙනිය", "බෙන්තොට", "කොස්ගොඩ", "අම්බලන්ගොඩ", "මීටියාගොඩ", "අහුන්ගල්ල", "උරගස්මන්හන්දිය"]
+            },
+            {
+                id: 19,
+                nameEn: "Matara",
+                nameSi: "මාතර",
+                districtEn: "Matara",
+                districtSi: "මාතර",
+                provinceEn: "Southern",
+                provinceSi: "දකුණ",
+                stationsEn: ["Matara", "Weligama", "Gandara", "Dikwella", "Kekanadurra", "Hakmana", "Kamburupitiya"],
+                stationsSi: ["මාතර", "වැලිගම", "ගන්දර", "දික්වැල්ල", "කැකණදුර", "හක්මන", "කඹුරුපිටිය"]
+            },
+            {
+                id: 20,
+                nameEn: "Tangalle",
+                nameSi: "තංගල්ල",
+                districtEn: "Hambantota",
+                districtSi: "හම්බන්තොට",
+                provinceEn: "Southern",
+                provinceSi: "දකුණ",
+                stationsEn: ["Tangalle", "Beliatta", "Weeraketiya", "Walasmulla", "Middeniya", "Hungama"],
+                stationsSi: ["තංගල්ල", "බෙලිඅත්ත", "වීරකැටිය", "වලස්මුල්ල", "මිද්දෙනිය", "හුංගම"]
+            },
+            {
+                id: 21,
+                nameEn: "Hambantota",
+                nameSi: "හම්බන්තොට",
+                districtEn: "Hambantota",
+                districtSi: "හම්බන්තොට",
+                provinceEn: "Southern",
+                provinceSi: "දකුණ",
+                stationsEn: ["Hambantota", "Ambalantota", "Tissamaharama", "Kataragama", "Lunugamvehera"],
+                stationsSi: ["හම්බන්තොට", "අම්බලන්තොට", "තිස්සමහාරාමය", "කතරගම", "ලුණුගම්වෙහෙර"]
+            },
+            {
+                id: 22,
+                nameEn: "Jaffna",
+                nameSi: "යාපනය",
+                districtEn: "Jaffna",
+                districtSi: "යාපනය",
+                provinceEn: "Northern",
+                provinceSi: "උතුර",
+                stationsEn: ["Jaffna", "Chavakachcheri", "Chunnakam", "Kayts", "Delft"],
+                stationsSi: ["යාපනය", "චාවකච්චේරිය", "චුන්නාකම්", "කයිට්ස්", "ඩෙල්ෆ්ට්"]
+            },
+            {
+                id: 23,
+                nameEn: "Kankesanthurai (KKS)",
+                nameSi: "කන්කසන්තුරය",
+                districtEn: "Jaffna",
+                districtSi: "යාපනය",
+                provinceEn: "Northern",
+                provinceSi: "උතුර",
+                stationsEn: ["Kankesanthurai", "Point Pedro", "Valvettithurai"],
+                stationsSi: ["කන්කසන්තුරය", "පේදුරුතුඩුව", "වල්වැටිතුරේ"]
+            },
+            {
+                id: 24,
+                nameEn: "Kilinochchi",
+                nameSi: "කිලිනොච්චිය",
+                districtEn: "Kilinochchi",
+                districtSi: "කිලිනොච්චිය",
+                provinceEn: "Northern",
+                provinceSi: "උතුර",
+                stationsEn: ["Kilinochchi", "Pooneryn", "Pallai", "Dharmapuram"],
+                stationsSi: ["කිලිනොච්චිය", "පූනරීන්", "පලෙයි", "ධර්මපුරම්"]
+            },
+            {
+                id: 25,
+                nameEn: "Mannar",
+                nameSi: "මන්නාරම",
+                districtEn: "Mannar",
+                districtSi: "මන්නාරම",
+                provinceEn: "Northern",
+                provinceSi: "උතුර",
+                stationsEn: ["Mannar", "Adampan", "Murunkan", "Thalaimannar"],
+                stationsSi: ["මන්නාරම", "අඩම්පන්", "මුරුන්කන්", "තලෙයිමන්නාරම"]
+            },
+            {
+                id: 26,
+                nameEn: "Vavuniya",
+                nameSi: "වවුනියාව",
+                districtEn: "Vavuniya",
+                districtSi: "වවුනියාව",
+                provinceEn: "Northern",
+                provinceSi: "උතුර",
+                stationsEn: ["Vavuniya", "Nedunkeni", "Poovarasankulam"],
+                stationsSi: ["වවුනියාව", "නෙඩුන්කර්නි", "පූවරසන්කුලම්"]
+            },
+            {
+                id: 27,
+                nameEn: "Mullaitivu",
+                nameSi: "මුලතිව්",
+                districtEn: "Mullaitivu",
+                districtSi: "මුලතිව්",
+                provinceEn: "Northern",
+                provinceSi: "උතුර",
+                stationsEn: ["Mullaitivu", "Oddusuddan", "Puthukkudiyirippu", "Mallavi"],
+                stationsSi: ["මුලතිව්", "ඔඩ්ඩුසුඩාන්", "පුදුකුඩිඉරිප්පු", "මල්ලාවි"]
+            },
+            {
+                id: 28,
+                nameEn: "Batticaloa",
+                nameSi: "මඩකලපුව",
+                districtEn: "Batticaloa",
+                districtSi: "මඩකලපුව",
+                provinceEn: "Eastern",
+                provinceSi: "නැගෙනහිර",
+                stationsEn: ["Batticaloa", "Kaluwanchikudy", "Eravur", "Kalkudah", "Kattankudy"],
+                stationsSi: ["මඩකලපුව", "කලුවාංචිකුඩි", "එරාවුර්", "කල්කුඩා", "කාත්තන්කුඩි"]
+            },
+            {
+                id: 29,
+                nameEn: "Ampara",
+                nameSi: "අම්පාර",
+                districtEn: "Ampara",
+                districtSi: "අම්පාර",
+                provinceEn: "Eastern",
+                provinceSi: "නැගෙනහිර",
+                stationsEn: ["Ampara", "Kalmunai", "Sammanthurai", "Akaraipattu", "Pothuvil"],
+                stationsSi: ["අම්පාර", "කල්මුණේ", "සම්මන්තුරේ", "අක්කරපත්තුව", "පොතුවිල්"]
+            },
+            {
+                id: 30,
+                nameEn: "Trincomalee",
+                nameSi: "ත්‍රිකුණාමලය",
+                districtEn: "Trincomalee",
+                districtSi: "ත්‍රිකුණාමලය",
+                provinceEn: "Eastern",
+                provinceSi: "නැගෙනහිර",
+                stationsEn: ["Trincomalee", "Uppuveli", "China Bay", "Kuchchaveli"],
+                stationsSi: ["ත්‍රිකුණාමලය", "උප්පුවේලි", "චීන වරාය", "කුච්චවේලි"]
+            },
+            {
+                id: 31,
+                nameEn: "Kantale",
+                nameSi: "කන්තලේ",
+                districtEn: "Trincomalee",
+                districtSi: "ත්‍රිකුණාමලය",
+                provinceEn: "Eastern",
+                provinceSi: "නැගෙනහිර",
+                stationsEn: ["Kantale", "Serunuwara", "Kinniya", "Mutur"],
+                stationsSi: ["කන්තලේ", "සේරුවිල", "කින්නියා", "මූතූර්"]
+            },
+            {
+                id: 32,
+                nameEn: "Kurunegala",
+                nameSi: "කුරුණෑගල",
+                districtEn: "Kurunegala",
+                districtSi: "කුරුණෑගල",
+                provinceEn: "North Western",
+                provinceSi: "වයඹ",
+                stationsEn: ["Kurunegala", "Mawathagama", "Wellawa", "Polgahawela"],
+                stationsSi: ["කුරුණෑගල", "මාවතගම", "වැල්ලව", "පොල්ගහවෙල"]
+            },
+            {
+                id: 33,
+                nameEn: "Kuliyapitiya",
+                nameSi: "කුලියාපිටිය",
+                districtEn: "Kurunegala",
+                districtSi: "කුරුණෑගල",
+                provinceEn: "North Western",
+                provinceSi: "වයඹ",
+                stationsEn: ["Kuliyapitiya", "Pannala", "Giriulla", "Narammala"],
+                stationsSi: ["කුලියාපිටිය", "පන්නල", "ගිරිඋල්ල", "නාරම්මල"]
+            },
+            {
+                id: 34,
+                nameEn: "Nikaweratiya",
+                nameSi: "නිකවැරටිය",
+                districtEn: "Kurunegala",
+                districtSi: "කුරුණෑගල",
+                provinceEn: "North Western",
+                provinceSi: "වයඹ",
+                stationsEn: ["Nikaweratiya", "Wariyapola", "Maho", "Galgamuwa"],
+                stationsSi: ["නිකවැරටිය", "වාරියපොළ", "මහෝ", "ගල්ගමුව"]
+            },
+            {
+                id: 35,
+                nameEn: "Puttalam",
+                nameSi: "පුත්තලම",
+                districtEn: "Puttalam",
+                districtSi: "පුත්තලම",
+                provinceEn: "North Western",
+                provinceSi: "වයඹ",
+                stationsEn: ["Puttalam", "Kalpitiya", "Wanathawilluwa", "Anamaduwa"],
+                stationsSi: ["පුත්තලම", "කල්පිටිය", "වනාතවිල්ලුව", "ආණමඩුව"]
+            },
+            {
+                id: 36,
+                nameEn: "Chilaw",
+                nameSi: "හලාවත",
+                districtEn: "Puttalam",
+                districtSi: "පුත්තලම",
+                provinceEn: "North Western",
+                provinceSi: "වයඹ",
+                stationsEn: ["Chilaw", "Marawila", "Dankotuwa", "Koswatta"],
+                stationsSi: ["හලාවත", "මාරවිල", "දංකොටුව", "කොස්වත්ත"]
+            },
+            {
+                id: 37,
+                nameEn: "Anuradhapura",
+                nameSi: "අනුරාධපුරය",
+                districtEn: "Anuradhapura",
+                districtSi: "අනුරාධපුරය",
+                provinceEn: "North Central",
+                provinceSi: "උතුරු මැද",
+                stationsEn: ["Anuradhapura", "Mihintale", "Medawachchiya", "Kebithigollewa"],
+                stationsSi: ["අනුරාධපුරය", "මිහින්තලේ", "මැදවච්චිය", "කැබිතිගොල්ලෑව"]
+            },
+            {
+                id: 38,
+                nameEn: "Polonnaruwa",
+                nameSi: "පොළොන්නරුව",
+                districtEn: "Polonnaruwa",
+                districtSi: "පොළොන්නරුව",
+                provinceEn: "North Central",
+                provinceSi: "උතුරු මැද",
+                stationsEn: ["Polonnaruwa", "Kaduruwela", "Minneriya", "Hingurakgoda"],
+                stationsSi: ["පොළොන්නරුව", "කදුරුවෙල", "මින්නේරිය", "හිඟුරක්ගොඩ"]
+            },
+            {
+                id: 39,
+                nameEn: "Badulla",
+                nameSi: "බදුල්ල",
+                districtEn: "Badulla",
+                districtSi: "බදුල්ල",
+                provinceEn: "Uva",
+                provinceSi: "ඌව",
+                stationsEn: ["Badulla", "Passara", "Haliela", "Meegahakiula"],
+                stationsSi: ["බදුල්ල", "පස්සර", "හැලිඇල", "මීගහකිවුල"]
+            },
+            {
+                id: 40,
+                nameEn: "Bandarawela",
+                nameSi: "බණ්ඩාරවෙල",
+                districtEn: "Badulla",
+                districtSi: "බදුල්ල",
+                provinceEn: "Uva",
+                provinceSi: "ඌව",
+                stationsEn: ["Bandarawela", "Diyatalawa", "Haputale", "Welimada"],
+                stationsSi: ["බණ්ඩාරවෙල", "දියතලාව", "හපුතලේ", "වැලිමඩ"]
+            },
+            {
+                id: 41,
+                nameEn: "Monaragala",
+                nameSi: "මොනරාගල",
+                districtEn: "Monaragala",
+                districtSi: "මොනරාගල",
+                provinceEn: "Uva",
+                provinceSi: "ඌව",
+                stationsEn: ["Monaragala", "Wellawaya", "Buttala", "Bibile"],
+                stationsSi: ["මොනරාගල", "වැල්ලවාය", "බුත්තල", "බිබිලේ"]
+            },
+            {
+                id: 42,
+                nameEn: "Ratnapura",
+                nameSi: "රත්නපුරය",
+                districtEn: "Ratnapura",
+                districtSi: "රත්නපුරය",
+                provinceEn: "Sabaragamuwa",
+                provinceSi: "සබරගමුව",
+                stationsEn: ["Ratnapura", "Pelmadulla", "Kahawatta", "Balangoda"],
+                stationsSi: ["රත්නපුරය", "පැල්මඩුල්ල", "කහවත්ත", "බලන්ගොඩ"]
+            },
+            {
+                id: 43,
+                nameEn: "Embilipitiya",
+                nameSi: "ඇඹිලිපිටිය",
+                districtEn: "Ratnapura",
+                districtSi: "රත්නපුරය",
+                provinceEn: "Sabaragamuwa",
+                provinceSi: "සබරගමුව",
+                stationsEn: ["Embilipitiya", "Kolonna", "Godakawela", "Kiriella"],
+                stationsSi: ["ඇඹිලිපිටිය", "කොලොන්න", "ගොඩකවෙල", "කිරිඇල්ල"]
+            },
+            {
+                id: 44,
+                nameEn: "Kegalle",
+                nameSi: "කෑගල්ල",
+                districtEn: "Kegalle",
+                districtSi: "කෑගල්ල",
+                provinceEn: "Sabaragamuwa",
+                provinceSi: "සබරගමුව",
+                stationsEn: ["Kegalle", "Mawanella", "Rambukkana", "Warakapola"],
+                stationsSi: ["කෑගල්ල", "මාවනැල්ල", "රඹුක්කන", "වරකාපොළ"]
+            },
+            {
+                id: 45,
+                nameEn: "Seethawakapura",
+                nameSi: "සීතාවකපුර",
+                districtEn: "Colombo",
+                districtSi: "කොළඹ",
+                provinceEn: "Western",
+                provinceSi: "බස්නාහිර",
+                stationsEn: ["Avissawella", "Kosgama", "Hanwella", "Ruwanwella"],
+                stationsSi: ["අවිස්සාවේල්ල", "කොස්ගම", "හංවැල්ල", "රුවන්වැල්ල"]
+            }
+        ];
+    </script>
+
+    <script>
+        const i18n = {
+            en: {
+                title: "Police Finder",
+                subtitle: "Find Sri Lankan Police Divisions, Districts, & Provinces",
+                chooseLang: "Select Language / භාෂාව තෝරන්න",
+                enBtn: "English",
+                siBtn: "සිංහල",
+                searchPlaceholder: "Type division or station (e.g., Nugegoda, Mirihana...)",
+                district: "District",
+                province: "Province",
+                stations: "Constituent Police Stations",
+                madeForAmmi: "Made for Ammi with ❤️ by Suduputha",
+                recentTitle: "Suggested for Quick Tap:",
+                noResults: "No divisions or stations found matching that name. Let's try another spelling!",
+                detailsHeading: "Division Information",
+                allDivisions: "All Police Divisions",
+                backToSearch: "Clear & Search Again",
+                emergencyTitle: "Important Police & Emergency Numbers",
+                copierMessage: "Details Copied to Clipboard!",
+                tapToView: "Tap to view details",
+                language: "Language",
+                fontSize: "Text Size"
+            },
+            si: {
+                title: "පොලිස් කොට්ඨාස සෙවුම",
+                subtitle: "ශ්‍රී ලංකාවේ පොලිස් කොට්ඨාස, දිස්ත්‍රික්ක සහ පළාත් පහසුවෙන් සොයාගන්න",
+                chooseLang: "Select Language / භාෂාව තෝරන්න",
+                enBtn: "English",
+                siBtn: "සිංහල",
+                searchPlaceholder: "කොට්ඨාසය හෝ ස්ථානය ටයිප් කරන්න (උදා: නුගේගොඩ, මිරිහාන...)",
+                district: "දිස්ත්‍රික්කය",
+                province: "පළාත",
+                stations: "අනුබද්ධ පොලිස් ස්ථාන",
+                madeForAmmi: "සුදු පුතාගෙන් ආදරණීය අම්මිට ආදරයෙන් ❤️",
+                recentTitle: "පහසුවෙන් තෝරාගැනීමට:",
+                noResults: "එම නමින් පොලිස් කොට්ඨාසයක් හෝ ස්ථානයක් සොයාගත නොහැකි විය. වෙනත් නමක් උත්සාහ කරන්න.",
+                detailsHeading: "කොට්ඨාසයේ විස්තර",
+                allDivisions: "සියලුම පොලිස් කොට්ඨාස",
+                backToSearch: "නැවත සෙවීමට මකන්න",
+                emergencyTitle: "වැදගත් හදිසි ඇමතුම් අංක",
+                copierMessage: "තොරතුරු සාර්ථකව පිටපත් කරගන්නා ලදී!",
+                tapToView: "විස්තර බැලීමට තට්ටු කරන්න",
+                language: "භාෂාව",
+                fontSize: "අකුරු ප්‍රමාණය"
+            }
+        };
+    </script>
+
+    <header class="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- App Logo Section -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="resetSearch()">
+                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shadow-inner">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+                <div>
+                    <h1 id="header-title" class="font-bold text-slate-800 text-base md:text-lg leading-tight">Sri Lanka Police Finder</h1>
+                    <p id="header-subtitle" class="text-xs text-slate-500 hidden md:block">For Ammi</p>
+                </div>
+            </div>
+
+            <!-- Configuration Controls -->
+            <div class="flex items-center space-x-2 md:space-x-3">
+                <!-- Font size adjuster -->
+                <div class="flex items-center bg-slate-100 rounded-full p-1 text-xs">
+                    <button onclick="changeFontSize(-1)" class="w-7 h-7 rounded-full bg-white hover:bg-slate-50 flex items-center justify-center text-slate-600 hover:text-slate-900 transition font-bold" title="Smaller Font">A-</button>
+                    <span class="px-2 font-semibold text-slate-500" id="font-size-indicator">100%</span>
+                    <button onclick="changeFontSize(1)" class="w-7 h-7 rounded-full bg-white hover:bg-slate-50 flex items-center justify-center text-slate-600 hover:text-slate-900 transition font-bold" title="Larger Font">A+</button>
+                </div>
+
+                <!-- Language toggle button -->
+                <button onclick="toggleLanguage()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs py-1.5 px-3 rounded-full shadow-sm hover:shadow transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-language text-sm"></i>
+                    <span id="language-toggle-text">සිංහල</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Initial Language Selection Overlay/Modal -->
+    <div id="language-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl text-center fade-in border border-blue-50">
+            <div class="w-16 h-16 mx-auto mb-4 bg-amber-50 rounded-full flex items-center justify-center text-amber-500 shadow-inner animate-pulse">
+                <i class="fa-solid fa-heart text-3xl"></i>
+            </div>
+            
+            <h2 class="text-xl font-bold text-slate-800 mb-1">>Choose Your Language / භාෂාව තෝරන්න</h2>
+          
+            
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="selectInitialLanguage('en')" class="p-5 border-2 border-slate-100 hover:border-blue-500 bg-slate-50 hover:bg-blue-50 rounded-2xl transition group text-center flex flex-col items-center justify-center">
+                  
+                    <span class="font-bold text-slate-700 text-sm">English</span>
+                </button>
+                <button onclick="selectInitialLanguage('si')" class="p-5 border-2 border-slate-100 hover:border-blue-500 bg-slate-50 hover:bg-blue-50 rounded-2xl transition group text-center flex flex-col items-center justify-center">
+                 
+                    <span class="font-bold text-slate-700 text-sm">සිංහල</span>
+                </button>
+            </div>
+
+            <div class="mt-6 text-[11px] text-slate-400 font-medium">
+                Made for Ammi by Suduputha
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-6 md:py-8" id="main-content-area">
+        
+        <!-- Search and Interactive Header -->
+        <section class="text-center mb-8">
+            <h2 id="hero-title" class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight leading-snug">
+                Sri Lanka Police Division Finder
+            </h2>
+            <p id="hero-subtitle" class="text-slate-500 text-sm md:text-base mt-2 max-w-xl mx-auto">
+                Quickly search for any police division to instantly find its province and district.
+            </p>
+        </section>
+
+        <!-- Main Search Bar Area -->
+        <section class="relative max-w-xl mx-auto mb-8 z-40">
+            <div class="relative bg-white rounded-2xl shadow-md border border-slate-200 p-1 flex items-center focus-within:ring-2 focus-within:ring-blue-400 transition">
+                <div class="pl-3 text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                </div>
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    oninput="handleSearchInput(this.value)"
+                    placeholder="Search by division or local station..." 
+                    class="w-full pl-3 pr-4 py-3 bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none font-medium text-base md:text-lg rounded-r-2xl"
+                    autocomplete="off"
+                >
+                <!-- Clear Button -->
+                <button 
+                    id="clear-btn" 
+                    onclick="clearSearch()" 
+                    class="hidden absolute right-3 text-slate-400 hover:text-slate-600 p-2 transition"
+                >
+                    <i class="fa-solid fa-circle-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Dynamic Auto-Suggestions Container -->
+            <div 
+                id="suggestions-box" 
+                class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden max-h-80 overflow-y-auto"
+            >
+                <!-- Filled dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- Container for No Results & Search Matches status -->
+        <div id="status-container" class="hidden text-center p-8 bg-slate-50 border border-slate-100 rounded-2xl max-w-xl mx-auto mb-8">
+            <div class="text-slate-400 text-4xl mb-3"><i class="fa-regular fa-face-frown"></i></div>
+            <p id="status-message" class="text-sm font-medium text-slate-600">No matches found.</p>
+        </div>
+
+        <!-- Information details viewer (Shows when a division is searched and clicked) -->
+        <section id="division-details-card" class="hidden max-w-2xl mx-auto mb-8 bg-white border border-blue-100 rounded-3xl shadow-lg shadow-blue-50/50 overflow-hidden fade-in">
+            <!-- Details Header Banner -->
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-5 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <span class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </span>
+                    <div>
+                        <span id="card-label" class="text-blue-100 text-[11px] font-bold uppercase tracking-wider block">Division Found</span>
+                        <h3 id="card-division-name" class="font-extrabold text-xl leading-tight">Colombo South</h3>
+                    </div>
+                </div>
+                <!-- Action Buttons: Share & Copy -->
+                <div class="flex items-center space-x-1.5">
+                    <button onclick="copyDetailsToClipboard()" class="p-2 bg-white/15 hover:bg-white/25 rounded-full text-white transition" title="Copy Info">
+                        <i class="fa-regular fa-clone text-base"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Details Attributes -->
+            <div class="p-6 space-y-5">
+                <!-- District and Province Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- District Card -->
+                    <div class="bg-amber-50/30 border border-amber-100/50 p-4 rounded-2xl flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-amber-100/60 text-amber-600 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-circle-nodes"></i>
+                        </div>
+                        <div>
+                            <span id="card-district-label" class="text-slate-400 text-xs font-semibold block uppercase">District</span>
+                            <span id="card-district-value" class="font-bold text-slate-800 text-lg">Colombo</span>
+                        </div>
+                    </div>
+
+                    <!-- Province Card -->
+                    <div class="bg-blue-50/30 border border-blue-100/50 p-4 rounded-2xl flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-blue-100/60 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div>
+                            <span id="card-province-label" class="text-slate-400 text-xs font-semibold block uppercase">Province</span>
+                            <span id="card-province-value" class="font-bold text-slate-800 text-lg">Western</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Underlying Stations Included in this Division -->
+                <div class="border-t border-slate-100 pt-5">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <i class="fa-solid fa-building-shield text-blue-500"></i>
+                        <h4 id="card-stations-label" class="font-bold text-slate-700 text-sm">Police Stations in this Division</h4>
+                    </div>
+                    <div id="card-stations-container" class="flex flex-wrap gap-2">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick browse and assistance shortcuts -->
+        <section class="max-w-xl mx-auto grid grid-cols-1 gap-6">
+            <!-- Popular/Quick Browse Directory -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <div class="flex items-center space-x-2 mb-3">
+                    <i class="fa-solid fa-star text-amber-400"></i>
+                    <h3 id="quick-browse-title" class="font-bold text-slate-700 text-sm">Suggested for Quick Tap</h3>
+                </div>
+                <div class="flex flex-wrap gap-2" id="popular-suggestions-container">
+                    <!-- Loaded dynamically in both English and Sinhala -->
+                </div>
+            </div>
+
+            <!-- Emergency Helplines for Ammi -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <div class="flex items-center space-x-2 mb-3">
+                    <i class="fa-solid fa-phone-volume text-rose-500"></i>
+                    <h3 id="emergency-title" class="font-bold text-slate-700 text-sm">Important Police & Emergency Numbers</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs md:text-sm">
+                    <!-- 119 Call -->
+                    <a href="tel:119" class="p-2.5 bg-rose-50/50 hover:bg-rose-50 rounded-xl border border-rose-100 flex items-center justify-between group transition">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-xs">119</span>
+                            <div>
+                                <p class="font-bold text-slate-800" id="emp-119-label">Police Emergency</p>
+                                <p class="text-[10px] text-slate-400" id="emp-119-sub">පොලිස් හදිසි ඇමතුම්</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-rose-300 group-hover:translate-x-0.5 transition"></i>
+                    </a>
+
+                    <!-- Suwaseriya -->
+                    <a href="tel:1990" class="p-2.5 bg-amber-50/50 hover:bg-amber-50 rounded-xl border border-amber-100 flex items-center justify-between group transition">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs"><i class="fa-solid fa-ambulance text-xs"></i></span>
+                            <div>
+                                <p class="font-bold text-slate-800" id="emp-1990-label">Suwaseriya Ambulance</p>
+                                <p class="text-[10px] text-slate-400" id="emp-1990-sub">සුවසැරිය ගිලන් රථ</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-amber-300 group-hover:translate-x-0.5 transition"></i>
+                    </a>
+
+                    <!-- Police Headquarters -->
+                    <a href="tel:0112421111" class="p-2.5 bg-blue-50/50 hover:bg-blue-50 rounded-xl border border-blue-100 flex items-center justify-between group transition">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-phone"></i></span>
+                            <div>
+                                <p class="font-bold text-slate-800" id="emp-hq-label">Police Headquarters</p>
+                                <p class="text-[10px] text-slate-400" id="emp-hq-sub">පොලිස් මූලස්ථානය</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-blue-300 group-hover:translate-x-0.5 transition"></i>
+                    </a>
+
+                    <!-- Accidents national hospital -->
+                    <a href="tel:0112691111" class="p-2.5 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-between group transition">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-8 h-8 rounded-full bg-slate-500 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-hospital"></i></span>
+                            <div>
+                                <p class="font-bold text-slate-800" id="emp-hospital-label">National Hospital</p>
+                                <p class="text-[10px] text-slate-400" id="emp-hospital-sub">කොළඹ ජාතික රෝහල</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-slate-300 group-hover:translate-x-0.5 transition"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Custom Toast Notification for copying clipboard details -->
+    <div id="toast-notification" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full shadow-xl flex items-center space-x-2.5 text-xs md:text-sm font-semibold opacity-0 pointer-events-none transition-all duration-300 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base animate-bounce"></i>
+        <span id="toast-text">Details Copied!</span>
+    </div>
+
+    <!-- Heartfelt footer watermark for Ammi -->
+    <footer class="bg-white border-t border-slate-100 py-6 text-center shadow-inner mt-10">
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Ammi Dedication -->
+            <p id="dedication-watermark" class="text-xs md:text-sm font-medium text-slate-400 transition hover:text-rose-500 flex items-center justify-center space-x-1.5 cursor-default">
+                <span>Made for Ammi with ❤️ by Suduputha</span>
+            </p>
+            <p class="text-[10px] text-slate-300 mt-1">Sri Lanka Police Divisions Directory Tool</p>
+        </div>
+    </footer>
+
+    <script>
+        // Global State Variables
+        let currentLanguage = 'en';
+        let currentFontSizeScale = 1; // 1 = 100%, 2 = 115%, 3 = 130%, 0 = 90%
+        let selectedDivisionId = null;
+
+        // Life Cycle Hook - Initial load
+        window.onload = function() {
+            // Check if Language Preference exists in local storage
+            const storedLang = localStorage.getItem('sudu_ammi_lang');
+            if (storedLang) {
+                currentLanguage = storedLang;
+                hideLanguageModal();
+                updateUI();
+            } else {
+                showLanguageModal();
+            }
+            
+            // Check Font size configuration
+            const storedFontSize = localStorage.getItem('sudu_ammi_fontsize');
+            if (storedFontSize) {
+                currentFontSizeScale = parseInt(storedFontSize);
+                applyFontSize();
+            }
+            
+            // Populate initial helpful directory suggestions
+            populateQuickBrowse();
+        };
+
+        function showLanguageModal() {
+            document.getElementById('language-modal').classList.remove('hidden');
+        }
+
+        function hideLanguageModal() {
+            document.getElementById('language-modal').classList.add('hidden');
+        }
+
+        function selectInitialLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('sudu_ammi_lang', lang);
+            hideLanguageModal();
+            updateUI();
+        }
+
+        function toggleLanguage() {
+            currentLanguage = (currentLanguage === 'en') ? 'si' : 'en';
+            localStorage.setItem('sudu_ammi_lang', currentLanguage);
+            updateUI();
+            // Refresh results based on search inputs
+            const currentSearch = document.getElementById('search-input').value;
+            if(currentSearch) {
+                handleSearchInput(currentSearch);
+            }
+        }
+
+        // Font Adjustment Logic suited for mothers (large scale support)
+        function changeFontSize(direction) {
+            currentFontSizeScale += direction;
+            if (currentFontSizeScale > 4) currentFontSizeScale = 4; // Max limit
+            if (currentFontSizeScale < -1) currentFontSizeScale = -1; // Min limit
+            
+            localStorage.setItem('sudu_ammi_fontsize', currentFontSizeScale);
+            applyFontSize();
+        }
+
+        function applyFontSize() {
+            const body = document.body;
+            const sizeIndicator = document.getElementById('font-size-indicator');
+            
+            // Remove previous classes
+            body.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl');
+            
+            let percentage = "100%";
+            switch(currentFontSizeScale) {
+                case -1:
+                    body.style.fontSize = "0.85rem";
+                    percentage = "85%";
+                    break;
+                case 1:
+                    body.style.fontSize = "1.05rem";
+                    percentage = "105%";
+                    break;
+                case 2:
+                    body.style.fontSize = "1.15rem";
+                    percentage = "115%";
+                    break;
+                case 3:
+                    body.style.fontSize = "1.25rem";
+                    percentage = "125%";
+                    break;
+                case 4:
+                    body.style.fontSize = "1.35rem";
+                    percentage = "135%";
+                    break;
+                default:
+                    body.style.fontSize = "1.0rem";
+                    percentage = "100%";
+            }
+            sizeIndicator.textContent = percentage;
+        }
+
+        // Smart search supporting both languages (even if Sinhala is selected, you can type in English and vice-versa)
+        function handleSearchInput(query) {
+            const clearBtn = document.getElementById('clear-btn');
+            const suggestionsBox = document.getElementById('suggestions-box');
+            
+            if (!query || query.trim() === '') {
+                clearBtn.classList.add('hidden');
+                suggestionsBox.classList.add('hidden');
+                return;
+            }
+            
+            clearBtn.classList.remove('hidden');
+            const cleanQuery = query.toLowerCase().trim();
+            
+            // Filter divisions on name (en/si), district (en/si), or individual police station (en/si)
+            const matches = [];
+            
+            policeDivisions.forEach(division => {
+                let matchWeight = 0;
+                let matchedReason = "";
+                let matchedReasonSi = "";
+                
+                // 1. Check division name match
+                if (division.nameEn.toLowerCase().includes(cleanQuery)) {
+                    matchWeight += 10;
+                }
+                if (division.nameSi.includes(cleanQuery)) {
+                    matchWeight += 10;
+                }
+                
+                // 2. Check district match
+                if (division.districtEn.toLowerCase().includes(cleanQuery)) {
+                    matchWeight += 5;
+                }
+                if (division.districtSi.includes(cleanQuery)) {
+                    matchWeight += 5;
+                }
+
+                // 3. Check underlying police stations (so if she types Mirihana, she gets Nugegoda division!)
+                let stationMatchesEn = [];
+                let stationMatchesSi = [];
+                
+                division.stationsEn.forEach((st, idx) => {
+                    if (st.toLowerCase().includes(cleanQuery)) {
+                        stationMatchesEn.push(st);
+                        stationMatchesSi.push(division.stationsSi[idx]);
+                        matchWeight += 8;
+                    }
+                });
+
+                division.stationsSi.forEach((st, idx) => {
+                    if (st.includes(cleanQuery)) {
+                        // Avoid duplicates if matched both En and Si
+                        if(!stationMatchesSi.includes(st)) {
+                            stationMatchesSi.push(st);
+                            stationMatchesEn.push(division.stationsEn[idx]);
+                        }
+                        matchWeight += 8;
+                    }
+                });
+
+                if (stationMatchesEn.length > 0) {
+                    matchedReason = `Includes station: ${stationMatchesEn.join(', ')}`;
+                    matchedReasonSi = `අනුබද්ධ ස්ථානය: ${stationMatchesSi.join(', ')}`;
+                }
+
+                if (matchWeight > 0) {
+                    matches.push({
+                        division,
+                        weight: matchWeight,
+                        matchedReason,
+                        matchedReasonSi
+                    });
+                }
+            });
+
+            // Sort matches based on highest score relevance
+            matches.sort((a, b) => b.weight - a.weight);
+
+            renderSuggestions(matches, query);
+        }
+
+        // Render drop-down auto suggestions
+        function renderSuggestions(matches, rawQuery) {
+            const suggestionsBox = document.getElementById('suggestions-box');
+            suggestionsBox.innerHTML = '';
+
+            if (matches.length === 0) {
+                suggestionsBox.classList.add('hidden');
+                showNoResultsStatus(true);
+                return;
+            }
+
+            showNoResultsStatus(false);
+            suggestionsBox.classList.remove('hidden');
+
+            matches.slice(0, 7).forEach(item => {
+                const div = item.division;
+                const suggestionItem = document.createElement('div');
+                suggestionItem.className = "p-4 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-0 transition flex items-center justify-between";
+                
+                // Choose label language based on system toggle
+                const displayName = currentLanguage === 'en' ? div.nameEn : div.nameSi;
+                const displaySubName = currentLanguage === 'en' ? div.nameSi : div.nameEn;
+                const displayDistrict = currentLanguage === 'en' ? div.districtEn : div.districtSi;
+                const displayProvince = currentLanguage === 'en' ? div.provinceEn : div.provinceSi;
+                
+                const reason = currentLanguage === 'en' ? item.matchedReason : item.matchedReasonSi;
+
+                suggestionItem.innerHTML = `
+                    <div class="flex-grow">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-slate-800 text-sm md:text-base">${displayName}</span>
+                            <span class="text-xs text-slate-400 font-medium">(${displaySubName})</span>
+                        </div>
+                        <div class="text-xs text-slate-500 mt-1">
+                            <i class="fa-solid fa-location-dot text-blue-400 mr-1"></i> ${displayDistrict} ${currentLanguage === 'en' ? 'District' : 'දිස්ත්‍රික්කය'} &nbsp;|&nbsp; 
+                            <i class="fa-solid fa-layer-group text-slate-400 mr-1"></i> ${displayProvince} ${currentLanguage === 'en' ? 'Province' : 'පළාත'}
+                        </div>
+                        ${reason ? `<div class="text-[11px] text-amber-600 bg-amber-50 rounded px-2 py-0.5 mt-1.5 inline-block font-medium"><i class="fa-solid fa-bullseye mr-1"></i>${reason}</div>` : ''}
+                    </div>
+                    <div class="text-blue-500 hover:translate-x-1 transition pl-3">
+                        <i class="fa-solid fa-circle-arrow-right text-lg md:text-xl"></i>
+                    </div>
+                `;
+
+                suggestionItem.onclick = () => {
+                    selectDivision(div);
+                };
+
+                suggestionsBox.appendChild(suggestionItem);
+            });
+        }
+
+        // Handle full detailed display when a Division is chosen
+        function selectDivision(division) {
+            selectedDivisionId = division.id;
+            
+            // Highlight selected details container
+            const detailsCard = document.getElementById('division-details-card');
+            detailsCard.classList.remove('hidden');
+
+            // Fill language specific details
+            const name = currentLanguage === 'en' ? division.nameEn : division.nameSi;
+            const district = currentLanguage === 'en' ? division.districtEn : division.districtSi;
+            const province = currentLanguage === 'en' ? division.provinceEn : division.provinceSi;
+
+            document.getElementById('card-division-name').textContent = name + " " + (currentLanguage === 'en' ? "Police Division" : "පොලිස් කොට්ඨාසය");
+            document.getElementById('card-district-value').textContent = district;
+            document.getElementById('card-province-value').textContent = province;
+
+            // Render sub-stations belonging to division
+            const stationsContainer = document.getElementById('card-stations-container');
+            stationsContainer.innerHTML = '';
+
+            const listEn = division.stationsEn;
+            const listSi = division.stationsSi;
+
+            listEn.forEach((stEn, idx) => {
+                const stSi = listSi[idx];
+                const badge = document.createElement('div');
+                badge.className = "bg-slate-100 hover:bg-blue-50 border border-slate-200/60 hover:border-blue-200 text-slate-700 hover:text-blue-800 transition py-1.5 px-3 rounded-xl text-xs font-semibold cursor-default flex items-center space-x-1.5";
+                badge.innerHTML = `
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                    <span>${currentLanguage === 'en' ? stEn : stSi}</span>
+                `;
+                stationsContainer.appendChild(badge);
+            });
+
+            // Set current text in input, hide suggestion popups
+            document.getElementById('search-input').value = currentLanguage === 'en' ? division.nameEn : division.nameSi;
+            document.getElementById('suggestions-box').classList.add('hidden');
+            document.getElementById('clear-btn').classList.remove('hidden');
+
+            // Scroll beautifully down to card viewer for Ammi
+            detailsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Quick Browse Suggestions loader (Popular/Easy taps)
+        function populateQuickBrowse() {
+            const container = document.getElementById('popular-suggestions-container');
+            container.innerHTML = '';
+
+            // Selected set of key divisions to tap instantly
+            const popularIds = [4, 11, 1, 17, 22, 32, 42]; 
+            const popular = policeDivisions.filter(d => popularIds.includes(d.id));
+
+            popular.forEach(div => {
+                const btn = document.createElement('button');
+                btn.className = "py-2 px-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 rounded-full text-xs font-bold transition flex items-center space-x-1.5 active:scale-95";
+                const label = currentLanguage === 'en' ? div.nameEn : div.nameSi;
+                btn.innerHTML = `
+                    <i class="fa-solid fa-hashtag text-slate-300 text-[10px]"></i>
+                    <span>${label}</span>
+                `;
+                btn.onclick = () => {
+                    selectDivision(div);
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // Error message handler
+        function showNoResultsStatus(show) {
+            const container = document.getElementById('status-container');
+            if (show) {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        // Reset & clearing controls
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('clear-btn').classList.add('hidden');
+            document.getElementById('suggestions-box').classList.add('hidden');
+            document.getElementById('division-details-card').classList.add('hidden');
+            showNoResultsStatus(false);
+            selectedDivisionId = null;
+        }
+
+        function resetSearch() {
+            clearSearch();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Clipboard Copying specifically written with standard legacy commands due to sandboxed iframe protections
+        function copyDetailsToClipboard() {
+            if (!selectedDivisionId) return;
+            const division = policeDivisions.find(d => d.id === selectedDivisionId);
+            if (!division) return;
+
+            const text = `--- Sri Lanka Police Division Finder ---
+Division: ${division.nameEn} (${division.nameSi})
+District: ${division.districtEn} (${division.districtSi})
+Province: ${division.provinceEn} (${division.provinceSi})
+Stations: ${division.stationsEn.join(', ')}`;
+
+            // Temporary DOM element to execute legacy copy
+            const tempInput = document.createElement("textarea");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            // Display Toast notification for Ammi
+            showToast(i18n[currentLanguage].copierMessage);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            const toastText = document.getElementById('toast-text');
+            
+            toastText.textContent = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        // UI Translation compiler
+        function updateUI() {
+            const labels = i18n[currentLanguage];
+
+            // Update DOM headers
+            document.getElementById('header-title').textContent = labels.title;
+            document.getElementById('header-subtitle').textContent = currentLanguage === 'en' ? "For Ammi" : "අම්මි වෙනුවෙන්";
+            
+            document.getElementById('hero-title').textContent = labels.title;
+            document.getElementById('hero-subtitle').textContent = labels.subtitle;
+
+            // Search input configurations
+            document.getElementById('search-input').placeholder = labels.searchPlaceholder;
+
+            // Popular directory header
+            document.getElementById('quick-browse-title').textContent = labels.recentTitle;
+            document.getElementById('emergency-title').textContent = labels.emergencyTitle;
+
+            // Detail Card labels
+            document.getElementById('card-label').textContent = labels.detailsHeading;
+            document.getElementById('card-district-label').textContent = labels.district;
+            document.getElementById('card-province-label').textContent = labels.province;
+            document.getElementById('card-stations-label').textContent = labels.stations;
+
+            // Update Emergency items
+            document.getElementById('emp-119-label').textContent = currentLanguage === 'en' ? "Police Emergency" : "පොලිස් හදිසි";
+            document.getElementById('emp-1990-label').textContent = currentLanguage === 'en' ? "Suwaseriya Ambulance" : "සුවසැරිය ගිලන් රථ";
+            document.getElementById('emp-hq-label').textContent = currentLanguage === 'en' ? "Police Headquarters" : "පොලිස් මූලස්ථානය";
+            document.getElementById('emp-hospital-label').textContent = currentLanguage === 'en' ? "National Hospital" : "කොළඹ ජාතික රෝහල";
+
+            // Status message
+            document.getElementById('status-message').textContent = labels.noResults;
+
+            // Toggle button language prompt
+            document.getElementById('language-toggle-text').textContent = currentLanguage === 'en' ? "සිංහල" : "English";
+
+            // Small signature text watermark
+            document.getElementById('dedication-watermark').innerHTML = `
+                <span>${labels.madeForAmmi}</span>
+            `;
+
+            // Refresh directory suggestions tags
+            populateQuickBrowse();
+
+            // Refresh selected details card if currently active
+            if (selectedDivisionId) {
+                const activeDiv = policeDivisions.find(d => d.id === selectedDivisionId);
+                if (activeDiv) {
+                    selectDivision(activeDiv);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
