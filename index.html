@@ -73,7 +73,7 @@
 <body class="min-h-screen flex flex-col justify-between text-slate-800 transition-all duration-300">
 
     <script>
-        // Database of all 45 Sri Lankan Police Divisions with Districts, Provinces, and constituent stations
+        // Enriched database containing all 45 Sri Lankan Police Divisions with Districts, Provinces, and constituent stations
         const policeDivisions = [
             {
                 id: 1,
@@ -281,8 +281,8 @@
                 districtSi: "මාතර",
                 provinceEn: "Southern",
                 provinceSi: "දකුණ",
-                stationsEn: ["Matara", "Weligama", "Gandara", "Dikwella", "Kekanadurra", "Hakmana", "Kamburupitiya"],
-                stationsSi: ["මාතර", "වැලිගම", "ගන්දර", "දික්වැල්ල", "කැකණදුර", "හක්මන", "කඹුරුපිටිය"]
+                stationsEn: ["Matara", "Weligama", "Gandara", "Dikwella", "Kekanadurra", "Hakmana", "Kamburupitiya", "Kotawila"],
+                stationsSi: ["මාතර", "වැලිගම", "ගන්දර", "දික්වැල්ල", "කැකණදුර", "හක්මන", "කඹුරුපිටිය", "කොටවිල"]
             },
             {
                 id: 20,
@@ -292,8 +292,8 @@
                 districtSi: "හම්බන්තොට",
                 provinceEn: "Southern",
                 provinceSi: "දකුණ",
-                stationsEn: ["Tangalle", "Beliatta", "Weeraketiya", "Walasmulla", "Middeniya", "Hungama"],
-                stationsSi: ["තංගල්ල", "බෙලිඅත්ත", "වීරකැටිය", "වලස්මුල්ල", "මිද්දෙනිය", "හුංගම"]
+                stationsEn: ["Tangalle", "Beliatta", "Weeraketiya", "Walasmulla", "Middeniya", "Hungama", "Okewela"],
+                stationsSi: ["තංගල්ල", "බෙලිඅත්ත", "වීරකැටිය", "වලස්මුල්ල", "මිද්දෙනිය", "හුංගම", "ඕකේවෙල"]
             },
             {
                 id: 21,
@@ -303,8 +303,8 @@
                 districtSi: "හම්බන්තොට",
                 provinceEn: "Southern",
                 provinceSi: "දකුණ",
-                stationsEn: ["Hambantota", "Ambalantota", "Tissamaharama", "Kataragama", "Lunugamvehera"],
-                stationsSi: ["හම්බන්තොට", "අම්බලන්තොට", "තිස්සමහාරාමය", "කතරගම", "ලුණුගම්වෙහෙර"]
+                stationsEn: ["Hambantota", "Ambalantota", "Tissamaharama", "Kataragama", "Lunugamvehera", "Mattala", "Hambantota Harbour", "Kirinda", "Angunakolapelessa"],
+                stationsSi: ["හම්බන්තොට", "අම්බලන්තොට", "තිස්සමහාරාමය", "කතරගම", "ලුණුගම්වෙහෙර", "මත්තල", "හම්බන්තොට වරාය", "කිරිඳ", "අඟුණකොළපැලැස්ස"]
             },
             {
                 id: 22,
@@ -577,47 +577,55 @@
         const i18n = {
             en: {
                 title: "Police Finder",
-                subtitle: "Find Sri Lankan Police Divisions, Districts, & Provinces",
+                subtitle: "Search Sri Lankan Police Stations & Divisions",
                 chooseLang: "Select Language / භාෂාව තෝරන්න",
                 enBtn: "English",
                 siBtn: "සිංහල",
-                searchPlaceholder: "Type division or station (e.g., Nugegoda, Mirihana...)",
+                searchPlaceholder: "Type station or division (e.g., Mattala, Nugegoda, Mirihana...)",
                 district: "District",
                 province: "Province",
                 stations: "Constituent Police Stations",
+                parentDivision: "Parent Police Division",
                 madeForAmmi: "Made for Ammi with ❤️ by Suduputha",
                 recentTitle: "Suggested for Quick Tap:",
-                noResults: "No divisions or stations found matching that name. Let's try another spelling!",
-                detailsHeading: "Division Information",
+                noResults: "No match found. Please try typing another name or spelling!",
+                detailsHeading: "Information Details",
                 allDivisions: "All Police Divisions",
                 backToSearch: "Clear & Search Again",
-                emergencyTitle: "Important Police & Emergency Numbers",
+                emergencyTitle: "Important Emergency Numbers",
                 copierMessage: "Details Copied to Clipboard!",
                 tapToView: "Tap to view details",
                 language: "Language",
-                fontSize: "Text Size"
+                fontSize: "Text Size",
+                policeStation: "Police Station",
+                policeDivision: "Police Division",
+                typeLabel: "Resource Type"
             },
             si: {
-                title: "පොලිස් කොට්ඨාස සෙවුම",
-                subtitle: "ශ්‍රී ලංකාවේ පොලිස් කොට්ඨාස, දිස්ත්‍රික්ක සහ පළාත් පහසුවෙන් සොයාගන්න",
+                title: "පොලිස් සෙවුම",
+                subtitle: "ශ්‍රී ලංකාවේ පොලිස් ස්ථාන සහ කොට්ඨාස පහසුවෙන් සොයාගන්න",
                 chooseLang: "Select Language / භාෂාව තෝරන්න",
                 enBtn: "English",
                 siBtn: "සිංහල",
-                searchPlaceholder: "කොට්ඨාසය හෝ ස්ථානය ටයිප් කරන්න (උදා: නුගේගොඩ, මිරිහාන...)",
+                searchPlaceholder: "පොලිස් ස්ථානය හෝ කොට්ඨාසය (උදා: මත්තල, නුගේගොඩ, මිරිහාන...)",
                 district: "දිස්ත්‍රික්කය",
                 province: "පළාත",
                 stations: "අනුබද්ධ පොලිස් ස්ථාන",
+                parentDivision: "ප්‍රධාන පොලිස් කොට්ඨාසය",
                 madeForAmmi: "සුදු පුතාගෙන් ආදරණීය අම්මිට ආදරයෙන් ❤️",
                 recentTitle: "පහසුවෙන් තෝරාගැනීමට:",
-                noResults: "එම නමින් පොලිස් කොට්ඨාසයක් හෝ ස්ථානයක් සොයාගත නොහැකි විය. වෙනත් නමක් උත්සාහ කරන්න.",
-                detailsHeading: "කොට්ඨාසයේ විස්තර",
+                noResults: "එම නමින් පොලිස් ස්ථානයක් හෝ කොට්ඨාසයක් සොයාගත නොහැකි විය. වෙනත් නමක් ටයිප් කරන්න.",
+                detailsHeading: "තොරතුරු විස්තර",
                 allDivisions: "සියලුම පොලිස් කොට්ඨාස",
                 backToSearch: "නැවත සෙවීමට මකන්න",
                 emergencyTitle: "වැදගත් හදිසි ඇමතුම් අංක",
                 copierMessage: "තොරතුරු සාර්ථකව පිටපත් කරගන්නා ලදී!",
                 tapToView: "විස්තර බැලීමට තට්ටු කරන්න",
                 language: "භාෂාව",
-                fontSize: "අකුරු ප්‍රමාණය"
+                fontSize: "අකුරු ප්‍රමාණය",
+                policeStation: "පොලිස් ස්ථානය",
+                policeDivision: "පොලිස් කොට්ඨාසය",
+                typeLabel: "වර්ගය"
             }
         };
     </script>
@@ -653,23 +661,22 @@
         </div>
     </header>
 
-    <!-- Initial Language Selection Overlay/Modal -->
     <div id="language-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl text-center fade-in border border-blue-50">
             <div class="w-16 h-16 mx-auto mb-4 bg-amber-50 rounded-full flex items-center justify-center text-amber-500 shadow-inner animate-pulse">
                 <i class="fa-solid fa-heart text-3xl"></i>
             </div>
             
-            <h2 class="text-xl font-bold text-slate-800 mb-1">>Choose Your Language / භාෂාව තෝරන්න</h2>
-          
+            <h2 class="text-xl font-bold text-slate-800 mb-1">Choose Your Language / භාෂාව තෝරන්න</h2>
+           
             
             <div class="grid grid-cols-2 gap-4">
                 <button onclick="selectInitialLanguage('en')" class="p-5 border-2 border-slate-100 hover:border-blue-500 bg-slate-50 hover:bg-blue-50 rounded-2xl transition group text-center flex flex-col items-center justify-center">
-                  
+                    
                     <span class="font-bold text-slate-700 text-sm">English</span>
                 </button>
                 <button onclick="selectInitialLanguage('si')" class="p-5 border-2 border-slate-100 hover:border-blue-500 bg-slate-50 hover:bg-blue-50 rounded-2xl transition group text-center flex flex-col items-center justify-center">
-                 
+                   
                     <span class="font-bold text-slate-700 text-sm">සිංහල</span>
                 </button>
             </div>
@@ -680,20 +687,19 @@
         </div>
     </div>
 
-    <!-- Main Content Container -->
     <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-6 md:py-8" id="main-content-area">
         
-        <!-- Search and Interactive Header -->
+        <!-- Search and Interactive Title Header -->
         <section class="text-center mb-8">
             <h2 id="hero-title" class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight leading-snug">
-                Sri Lanka Police Division Finder
+                Sri Lanka Police Finder
             </h2>
             <p id="hero-subtitle" class="text-slate-500 text-sm md:text-base mt-2 max-w-xl mx-auto">
-                Quickly search for any police division to instantly find its province and district.
+                Search easily for any Sri Lankan police station or territorial division.
             </p>
         </section>
 
-        <!-- Main Search Bar Area -->
+        <!-- Main Search Input Bar Area -->
         <section class="relative max-w-xl mx-auto mb-8 z-40">
             <div class="relative bg-white rounded-2xl shadow-md border border-slate-200 p-1 flex items-center focus-within:ring-2 focus-within:ring-blue-400 transition">
                 <div class="pl-3 text-slate-400">
@@ -703,7 +709,7 @@
                     type="text" 
                     id="search-input" 
                     oninput="handleSearchInput(this.value)"
-                    placeholder="Search by division or local station..." 
+                    placeholder="Search by division or station..." 
                     class="w-full pl-3 pr-4 py-3 bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none font-medium text-base md:text-lg rounded-r-2xl"
                     autocomplete="off"
                 >
@@ -717,22 +723,20 @@
                 </button>
             </div>
 
-            <!-- Dynamic Auto-Suggestions Container -->
             <div 
                 id="suggestions-box" 
                 class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden max-h-80 overflow-y-auto"
             >
-                <!-- Filled dynamically via JS -->
+                <!-- Filled dynamically via JavaScript -->
             </div>
         </section>
 
-        <!-- Container for No Results & Search Matches status -->
+        <!-- No Results Status Notification -->
         <div id="status-container" class="hidden text-center p-8 bg-slate-50 border border-slate-100 rounded-2xl max-w-xl mx-auto mb-8">
             <div class="text-slate-400 text-4xl mb-3"><i class="fa-regular fa-face-frown"></i></div>
             <p id="status-message" class="text-sm font-medium text-slate-600">No matches found.</p>
         </div>
 
-        <!-- Information details viewer (Shows when a division is searched and clicked) -->
         <section id="division-details-card" class="hidden max-w-2xl mx-auto mb-8 bg-white border border-blue-100 rounded-3xl shadow-lg shadow-blue-50/50 overflow-hidden fade-in">
             <!-- Details Header Banner -->
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-5 flex items-center justify-between">
@@ -741,19 +745,17 @@
                         <i class="fa-solid fa-map-location-dot"></i>
                     </span>
                     <div>
-                        <span id="card-label" class="text-blue-100 text-[11px] font-bold uppercase tracking-wider block">Division Found</span>
-                        <h3 id="card-division-name" class="font-extrabold text-xl leading-tight">Colombo South</h3>
+                        <span id="card-label-type" class="text-blue-100 text-[10px] font-bold uppercase tracking-wider block">Police Station</span>
+                        <h3 id="card-title-name" class="font-extrabold text-xl leading-tight">Mattala Police Station</h3>
                     </div>
                 </div>
-                <!-- Action Buttons: Share & Copy -->
-                <div class="flex items-center space-x-1.5">
-                    <button onclick="copyDetailsToClipboard()" class="p-2 bg-white/15 hover:bg-white/25 rounded-full text-white transition" title="Copy Info">
-                        <i class="fa-regular fa-clone text-base"></i>
-                    </button>
-                </div>
+                <!-- Action Button: Copy to Clipboard -->
+                <button onclick="copyDetailsToClipboard()" class="p-2 bg-white/15 hover:bg-white/25 rounded-full text-white transition" title="Copy Info">
+                    <i class="fa-regular fa-clone text-base"></i>
+                </button>
             </div>
 
-            <!-- Details Attributes -->
+            <!-- Details Content Fields -->
             <div class="p-6 space-y-5">
                 <!-- District and Province Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -764,7 +766,7 @@
                         </div>
                         <div>
                             <span id="card-district-label" class="text-slate-400 text-xs font-semibold block uppercase">District</span>
-                            <span id="card-district-value" class="font-bold text-slate-800 text-lg">Colombo</span>
+                            <span id="card-district-value" class="font-bold text-slate-800 text-lg">-</span>
                         </div>
                     </div>
 
@@ -775,42 +777,55 @@
                         </div>
                         <div>
                             <span id="card-province-label" class="text-slate-400 text-xs font-semibold block uppercase">Province</span>
-                            <span id="card-province-value" class="font-bold text-slate-800 text-lg">Western</span>
+                            <span id="card-province-value" class="font-bold text-slate-800 text-lg">-</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Underlying Stations Included in this Division -->
+                <!-- Parents & Sub-stations Conditional Area -->
                 <div class="border-t border-slate-100 pt-5">
-                    <div class="flex items-center space-x-2 mb-3">
-                        <i class="fa-solid fa-building-shield text-blue-500"></i>
-                        <h4 id="card-stations-label" class="font-bold text-slate-700 text-sm">Police Stations in this Division</h4>
+                    <!-- Parent Division Block (Shown for Stations) -->
+                    <div id="parent-division-container" class="hidden">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <i class="fa-solid fa-building-shield text-indigo-500 text-base"></i>
+                            <h4 id="parent-division-title-label" class="font-bold text-slate-700 text-sm">Parent Police Division</h4>
+                        </div>
+                        <div id="parent-division-badge-target" class="inline-block">
+                            <!-- Injected dynamically -->
+                        </div>
                     </div>
-                    <div id="card-stations-container" class="flex flex-wrap gap-2">
-                        <!-- Filled dynamically -->
+
+                    <!-- Sub stations list (Shown for Divisions) -->
+                    <div id="constituent-stations-container" class="hidden">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <i class="fa-solid fa-house-medical-shield text-blue-500 text-base"></i>
+                            <h4 id="constituent-stations-title-label" class="font-bold text-slate-700 text-sm">Constituent Police Stations</h4>
+                        </div>
+                        <div id="constituent-stations-badges-target" class="flex flex-wrap gap-2">
+                            <!-- Injected dynamically -->
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Quick browse and assistance shortcuts -->
         <section class="max-w-xl mx-auto grid grid-cols-1 gap-6">
-            <!-- Popular/Quick Browse Directory -->
+            <!-- Popular Quick Tap suggestions -->
             <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
                 <div class="flex items-center space-x-2 mb-3">
                     <i class="fa-solid fa-star text-amber-400"></i>
                     <h3 id="quick-browse-title" class="font-bold text-slate-700 text-sm">Suggested for Quick Tap</h3>
                 </div>
                 <div class="flex flex-wrap gap-2" id="popular-suggestions-container">
-                    <!-- Loaded dynamically in both English and Sinhala -->
+                    <!-- Loaded dynamically in selected language -->
                 </div>
             </div>
 
-            <!-- Emergency Helplines for Ammi -->
+            <!-- Core Emergency Helplines dialing widgets -->
             <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
                 <div class="flex items-center space-x-2 mb-3">
                     <i class="fa-solid fa-phone-volume text-rose-500"></i>
-                    <h3 id="emergency-title" class="font-bold text-slate-700 text-sm">Important Police & Emergency Numbers</h3>
+                    <h3 id="emergency-title" class="font-bold text-slate-700 text-sm">Important Emergency Numbers</h3>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs md:text-sm">
                     <!-- 119 Call -->
@@ -819,43 +834,43 @@
                             <span class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-xs">119</span>
                             <div>
                                 <p class="font-bold text-slate-800" id="emp-119-label">Police Emergency</p>
-                                <p class="text-[10px] text-slate-400" id="emp-119-sub">පොලිස් හදිසි ඇමතුම්</p>
+                                <p class="text-[10px] text-slate-400">පොලිස් හදිසි ඇමතුම්</p>
                             </div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-rose-300 group-hover:translate-x-0.5 transition"></i>
                     </a>
 
-                    <!-- Suwaseriya -->
+                    <!-- Suwaseriya Ambulance -->
                     <a href="tel:1990" class="p-2.5 bg-amber-50/50 hover:bg-amber-50 rounded-xl border border-amber-100 flex items-center justify-between group transition">
                         <div class="flex items-center space-x-2.5">
                             <span class="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs"><i class="fa-solid fa-ambulance text-xs"></i></span>
                             <div>
                                 <p class="font-bold text-slate-800" id="emp-1990-label">Suwaseriya Ambulance</p>
-                                <p class="text-[10px] text-slate-400" id="emp-1990-sub">සුවසැරිය ගිලන් රථ</p>
+                                <p class="text-[10px] text-slate-400">සුවසැරිය ගිලන් රථ</p>
                             </div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-amber-300 group-hover:translate-x-0.5 transition"></i>
                     </a>
 
-                    <!-- Police Headquarters -->
+                    <!-- Police HQ -->
                     <a href="tel:0112421111" class="p-2.5 bg-blue-50/50 hover:bg-blue-50 rounded-xl border border-blue-100 flex items-center justify-between group transition">
                         <div class="flex items-center space-x-2.5">
                             <span class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-phone"></i></span>
                             <div>
                                 <p class="font-bold text-slate-800" id="emp-hq-label">Police Headquarters</p>
-                                <p class="text-[10px] text-slate-400" id="emp-hq-sub">පොලිස් මූලස්ථානය</p>
+                                <p class="text-[10px] text-slate-400">පොලිස් මූලස්ථානය</p>
                             </div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-blue-300 group-hover:translate-x-0.5 transition"></i>
                     </a>
 
-                    <!-- Accidents national hospital -->
+                    <!-- Colombo National Hospital -->
                     <a href="tel:0112691111" class="p-2.5 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-between group transition">
                         <div class="flex items-center space-x-2.5">
                             <span class="w-8 h-8 rounded-full bg-slate-500 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-hospital"></i></span>
                             <div>
                                 <p class="font-bold text-slate-800" id="emp-hospital-label">National Hospital</p>
-                                <p class="text-[10px] text-slate-400" id="emp-hospital-sub">කොළඹ ජාතික රෝහල</p>
+                                <p class="text-[10px] text-slate-400">කොළඹ ජාතික රෝහල</p>
                             </div>
                         </div>
                         <i class="fa-solid fa-chevron-right text-slate-300 group-hover:translate-x-0.5 transition"></i>
@@ -865,33 +880,36 @@
         </section>
     </main>
 
-    <!-- Custom Toast Notification for copying clipboard details -->
+    <!-- Custom Floating Toast Notification -->
     <div id="toast-notification" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full shadow-xl flex items-center space-x-2.5 text-xs md:text-sm font-semibold opacity-0 pointer-events-none transition-all duration-300 z-50">
         <i class="fa-solid fa-circle-check text-emerald-400 text-base animate-bounce"></i>
         <span id="toast-text">Details Copied!</span>
     </div>
 
-    <!-- Heartfelt footer watermark for Ammi -->
+    <!-- Soft Heartfelt Footer signature watermark for Ammi -->
     <footer class="bg-white border-t border-slate-100 py-6 text-center shadow-inner mt-10">
         <div class="max-w-4xl mx-auto px-4">
-            <!-- Ammi Dedication -->
             <p id="dedication-watermark" class="text-xs md:text-sm font-medium text-slate-400 transition hover:text-rose-500 flex items-center justify-center space-x-1.5 cursor-default">
                 <span>Made for Ammi with ❤️ by Suduputha</span>
             </p>
-            <p class="text-[10px] text-slate-300 mt-1">Sri Lanka Police Divisions Directory Tool</p>
+            <p class="text-[10px] text-slate-300 mt-1">Sri Lanka Police Search Index & Station Directory</p>
         </div>
     </footer>
 
     <script>
         // Global State Variables
         let currentLanguage = 'en';
-        let currentFontSizeScale = 1; // 1 = 100%, 2 = 115%, 3 = 130%, 0 = 90%
-        let selectedDivisionId = null;
+        let currentFontSizeScale = 1; // 1 = 105%, 2 = 115%, 3 = 125%, 4 = 135%, -1 = 85%
+        let searchableItems = []; // Contains flat list of both Divisions and Stations
+        let activeSelectedItem = null; // Currently rendered element in detailed view
 
         // Life Cycle Hook - Initial load
         window.onload = function() {
-            // Check if Language Preference exists in local storage
-            const storedLang = localStorage.getItem('sudu_ammi_lang');
+            // Build flat index
+            initializeSearchIndex();
+
+            // Load language states from LocalStorage
+            const storedLang = localStorage.getItem('sudu_ammi_lang_v2');
             if (storedLang) {
                 currentLanguage = storedLang;
                 hideLanguageModal();
@@ -901,15 +919,55 @@
             }
             
             // Check Font size configuration
-            const storedFontSize = localStorage.getItem('sudu_ammi_fontsize');
+            const storedFontSize = localStorage.getItem('sudu_ammi_fontsize_v2');
             if (storedFontSize) {
                 currentFontSizeScale = parseInt(storedFontSize);
                 applyFontSize();
             }
             
-            // Populate initial helpful directory suggestions
+            // Initialize quick suggestions
             populateQuickBrowse();
         };
+
+        // Flat mapping to build an instant search database for Stations & Divisions
+        function initializeSearchIndex() {
+            searchableItems = [];
+            
+            policeDivisions.forEach(div => {
+                // 1. Index the Division itself
+                searchableItems.push({
+                    id: `div_${div.id}`,
+                    type: "division",
+                    nameEn: div.nameEn,
+                    nameSi: div.nameSi,
+                    divisionEn: div.nameEn,
+                    divisionSi: div.nameSi,
+                    districtEn: div.districtEn,
+                    districtSi: div.districtSi,
+                    provinceEn: div.provinceEn,
+                    provinceSi: div.provinceSi,
+                    stationsEn: div.stationsEn,
+                    stationsSi: div.stationsSi
+                });
+
+                // 2. Index each individual police station under this division
+                div.stationsEn.forEach((stEn, idx) => {
+                    const stSi = div.stationsSi[idx] || stEn;
+                    searchableItems.push({
+                        id: `st_${div.id}_${idx}`,
+                        type: "station",
+                        nameEn: stEn,
+                        nameSi: stSi,
+                        divisionEn: div.nameEn,
+                        divisionSi: div.nameSi,
+                        districtEn: div.districtEn,
+                        districtSi: div.districtSi,
+                        provinceEn: div.provinceEn,
+                        provinceSi: div.provinceSi
+                    });
+                });
+            });
+        }
 
         function showLanguageModal() {
             document.getElementById('language-modal').classList.remove('hidden');
@@ -921,38 +979,36 @@
 
         function selectInitialLanguage(lang) {
             currentLanguage = lang;
-            localStorage.setItem('sudu_ammi_lang', lang);
+            localStorage.setItem('sudu_ammi_lang_v2', lang);
             hideLanguageModal();
             updateUI();
         }
 
         function toggleLanguage() {
             currentLanguage = (currentLanguage === 'en') ? 'si' : 'en';
-            localStorage.setItem('sudu_ammi_lang', currentLanguage);
+            localStorage.setItem('sudu_ammi_lang_v2', currentLanguage);
             updateUI();
-            // Refresh results based on search inputs
+            
+            // Re-trigger query matches based on translated settings
             const currentSearch = document.getElementById('search-input').value;
-            if(currentSearch) {
+            if (currentSearch) {
                 handleSearchInput(currentSearch);
             }
         }
 
-        // Font Adjustment Logic suited for mothers (large scale support)
+        // Accessible font sizing settings (perfect for Ammi)
         function changeFontSize(direction) {
             currentFontSizeScale += direction;
-            if (currentFontSizeScale > 4) currentFontSizeScale = 4; // Max limit
-            if (currentFontSizeScale < -1) currentFontSizeScale = -1; // Min limit
+            if (currentFontSizeScale > 4) currentFontSizeScale = 4;
+            if (currentFontSizeScale < -1) currentFontSizeScale = -1;
             
-            localStorage.setItem('sudu_ammi_fontsize', currentFontSizeScale);
+            localStorage.setItem('sudu_ammi_fontsize_v2', currentFontSizeScale);
             applyFontSize();
         }
 
         function applyFontSize() {
             const body = document.body;
             const sizeIndicator = document.getElementById('font-size-indicator');
-            
-            // Remove previous classes
-            body.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl');
             
             let percentage = "100%";
             switch(currentFontSizeScale) {
@@ -983,7 +1039,6 @@
             sizeIndicator.textContent = percentage;
         }
 
-        // Smart search supporting both languages (even if Sinhala is selected, you can type in English and vice-versa)
         function handleSearchInput(query) {
             const clearBtn = document.getElementById('clear-btn');
             const suggestionsBox = document.getElementById('suggestions-box');
@@ -996,77 +1051,56 @@
             
             clearBtn.classList.remove('hidden');
             const cleanQuery = query.toLowerCase().trim();
-            
-            // Filter divisions on name (en/si), district (en/si), or individual police station (en/si)
             const matches = [];
-            
-            policeDivisions.forEach(division => {
+
+            searchableItems.forEach(item => {
                 let matchWeight = 0;
-                let matchedReason = "";
-                let matchedReasonSi = "";
                 
-                // 1. Check division name match
-                if (division.nameEn.toLowerCase().includes(cleanQuery)) {
+                // Name matches (direct name matches are highly prioritized)
+                if (item.nameEn.toLowerCase().startsWith(cleanQuery)) {
+                    matchWeight += 100;
+                } else if (item.nameEn.toLowerCase().includes(cleanQuery)) {
+                    matchWeight += 50;
+                }
+
+                if (item.nameSi.startsWith(cleanQuery)) {
+                    matchWeight += 100;
+                } else if (item.nameSi.includes(cleanQuery)) {
+                    matchWeight += 50;
+                }
+
+                // Parent division context checks
+                if (item.divisionEn.toLowerCase().includes(cleanQuery)) {
                     matchWeight += 10;
                 }
-                if (division.nameSi.includes(cleanQuery)) {
+                if (item.divisionSi.includes(cleanQuery)) {
                     matchWeight += 10;
                 }
-                
-                // 2. Check district match
-                if (division.districtEn.toLowerCase().includes(cleanQuery)) {
+
+                // District checks
+                if (item.districtEn.toLowerCase().includes(cleanQuery)) {
                     matchWeight += 5;
                 }
-                if (division.districtSi.includes(cleanQuery)) {
+                if (item.districtSi.includes(cleanQuery)) {
                     matchWeight += 5;
-                }
-
-                // 3. Check underlying police stations (so if she types Mirihana, she gets Nugegoda division!)
-                let stationMatchesEn = [];
-                let stationMatchesSi = [];
-                
-                division.stationsEn.forEach((st, idx) => {
-                    if (st.toLowerCase().includes(cleanQuery)) {
-                        stationMatchesEn.push(st);
-                        stationMatchesSi.push(division.stationsSi[idx]);
-                        matchWeight += 8;
-                    }
-                });
-
-                division.stationsSi.forEach((st, idx) => {
-                    if (st.includes(cleanQuery)) {
-                        // Avoid duplicates if matched both En and Si
-                        if(!stationMatchesSi.includes(st)) {
-                            stationMatchesSi.push(st);
-                            stationMatchesEn.push(division.stationsEn[idx]);
-                        }
-                        matchWeight += 8;
-                    }
-                });
-
-                if (stationMatchesEn.length > 0) {
-                    matchedReason = `Includes station: ${stationMatchesEn.join(', ')}`;
-                    matchedReasonSi = `අනුබද්ධ ස්ථානය: ${stationMatchesSi.join(', ')}`;
                 }
 
                 if (matchWeight > 0) {
                     matches.push({
-                        division,
-                        weight: matchWeight,
-                        matchedReason,
-                        matchedReasonSi
+                        item,
+                        weight: matchWeight
                     });
                 }
             });
 
-            // Sort matches based on highest score relevance
+            // Sort matches based on relevance score (weight)
             matches.sort((a, b) => b.weight - a.weight);
 
-            renderSuggestions(matches, query);
+            renderSuggestions(matches);
         }
 
-        // Render drop-down auto suggestions
-        function renderSuggestions(matches, rawQuery) {
+        // Display results matching typed query inside the dropdown list
+        function renderSuggestions(matches) {
             const suggestionsBox = document.getElementById('suggestions-box');
             suggestionsBox.innerHTML = '';
 
@@ -1079,113 +1113,159 @@
             showNoResultsStatus(false);
             suggestionsBox.classList.remove('hidden');
 
-            matches.slice(0, 7).forEach(item => {
-                const div = item.division;
-                const suggestionItem = document.createElement('div');
-                suggestionItem.className = "p-4 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-0 transition flex items-center justify-between";
+            // Render top 7 results for clean spacing
+            matches.slice(0, 7).forEach(match => {
+                const targetItem = match.item;
+                const suggestionRow = document.createElement('div');
+                suggestionRow.className = "p-4 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-0 transition flex items-center justify-between";
                 
-                // Choose label language based on system toggle
-                const displayName = currentLanguage === 'en' ? div.nameEn : div.nameSi;
-                const displaySubName = currentLanguage === 'en' ? div.nameSi : div.nameEn;
-                const displayDistrict = currentLanguage === 'en' ? div.districtEn : div.districtSi;
-                const displayProvince = currentLanguage === 'en' ? div.provinceEn : div.provinceSi;
+                const displayName = currentLanguage === 'en' ? targetItem.nameEn : targetItem.nameSi;
+                const displaySubName = currentLanguage === 'en' ? targetItem.nameSi : targetItem.nameEn;
+                const displayDistrict = currentLanguage === 'en' ? targetItem.districtEn : targetItem.districtSi;
+                const displayProvince = currentLanguage === 'en' ? targetItem.provinceEn : targetItem.provinceSi;
                 
-                const reason = currentLanguage === 'en' ? item.matchedReason : item.matchedReasonSi;
+                const typeBadgeText = targetItem.type === 'station' ? i18n[currentLanguage].policeStation : i18n[currentLanguage].policeDivision;
+                const typeBadgeClass = targetItem.type === 'station' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800';
 
-                suggestionItem.innerHTML = `
+                suggestionRow.innerHTML = `
                     <div class="flex-grow">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex flex-wrap items-center gap-1.5">
                             <span class="font-bold text-slate-800 text-sm md:text-base">${displayName}</span>
                             <span class="text-xs text-slate-400 font-medium">(${displaySubName})</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide ${typeBadgeClass}">${typeBadgeText}</span>
                         </div>
                         <div class="text-xs text-slate-500 mt-1">
-                            <i class="fa-solid fa-location-dot text-blue-400 mr-1"></i> ${displayDistrict} ${currentLanguage === 'en' ? 'District' : 'දිස්ත්‍රික්කය'} &nbsp;|&nbsp; 
-                            <i class="fa-solid fa-layer-group text-slate-400 mr-1"></i> ${displayProvince} ${currentLanguage === 'en' ? 'Province' : 'පළාත'}
+                            <i class="fa-solid fa-location-dot text-blue-400 mr-1"></i> ${displayDistrict} &nbsp;|&nbsp; 
+                            <i class="fa-solid fa-layer-group text-slate-400 mr-1"></i> ${displayProvince}
                         </div>
-                        ${reason ? `<div class="text-[11px] text-amber-600 bg-amber-50 rounded px-2 py-0.5 mt-1.5 inline-block font-medium"><i class="fa-solid fa-bullseye mr-1"></i>${reason}</div>` : ''}
                     </div>
                     <div class="text-blue-500 hover:translate-x-1 transition pl-3">
                         <i class="fa-solid fa-circle-arrow-right text-lg md:text-xl"></i>
                     </div>
                 `;
 
-                suggestionItem.onclick = () => {
-                    selectDivision(div);
+                suggestionRow.onclick = () => {
+                    selectMatchedItem(targetItem);
                 };
 
-                suggestionsBox.appendChild(suggestionItem);
+                suggestionsBox.appendChild(suggestionRow);
             });
         }
 
-        // Handle full detailed display when a Division is chosen
-        function selectDivision(division) {
-            selectedDivisionId = division.id;
+        function selectMatchedItem(targetItem) {
+            activeSelectedItem = targetItem;
             
-            // Highlight selected details container
             const detailsCard = document.getElementById('division-details-card');
             detailsCard.classList.remove('hidden');
 
-            // Fill language specific details
-            const name = currentLanguage === 'en' ? division.nameEn : division.nameSi;
-            const district = currentLanguage === 'en' ? division.districtEn : division.districtSi;
-            const province = currentLanguage === 'en' ? division.provinceEn : division.provinceSi;
+            // Set main language values
+            const displayName = currentLanguage === 'en' ? targetItem.nameEn : targetItem.nameSi;
+            const displayDistrict = currentLanguage === 'en' ? targetItem.districtEn : targetItem.districtSi;
+            const displayProvince = currentLanguage === 'en' ? targetItem.provinceEn : targetItem.provinceSi;
 
-            document.getElementById('card-division-name').textContent = name + " " + (currentLanguage === 'en' ? "Police Division" : "පොලිස් කොට්ඨාසය");
-            document.getElementById('card-district-value').textContent = district;
-            document.getElementById('card-province-value').textContent = province;
+            // Apply card details
+            document.getElementById('card-title-name').textContent = displayName;
+            document.getElementById('card-district-value').textContent = displayDistrict;
+            document.getElementById('card-province-value').textContent = displayProvince;
 
-            // Render sub-stations belonging to division
-            const stationsContainer = document.getElementById('card-stations-container');
-            stationsContainer.innerHTML = '';
+            // Handle type configurations
+            const parentSection = document.getElementById('parent-division-container');
+            const constituentSection = document.getElementById('constituent-stations-container');
 
-            const listEn = division.stationsEn;
-            const listSi = division.stationsSi;
+            if (targetItem.type === 'station') {
+                document.getElementById('card-label-type').textContent = i18n[currentLanguage].policeStation;
+                constituentSection.classList.add('hidden');
+                parentSection.classList.remove('hidden');
 
-            listEn.forEach((stEn, idx) => {
-                const stSi = listSi[idx];
-                const badge = document.createElement('div');
-                badge.className = "bg-slate-100 hover:bg-blue-50 border border-slate-200/60 hover:border-blue-200 text-slate-700 hover:text-blue-800 transition py-1.5 px-3 rounded-xl text-xs font-semibold cursor-default flex items-center space-x-1.5";
-                badge.innerHTML = `
-                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                    <span>${currentLanguage === 'en' ? stEn : stSi}</span>
-                `;
-                stationsContainer.appendChild(badge);
-            });
+                // Generate Parent division clickable button
+                const parentBadgeTarget = document.getElementById('parent-division-badge-target');
+                parentBadgeTarget.innerHTML = '';
 
-            // Set current text in input, hide suggestion popups
-            document.getElementById('search-input').value = currentLanguage === 'en' ? division.nameEn : division.nameSi;
+                // Find parent division matching station values
+                const matchedDiv = searchableItems.find(x => x.type === 'division' && x.nameEn === targetItem.divisionEn);
+                if (matchedDiv) {
+                    const parentBtn = document.createElement('button');
+                    parentBtn.className = "py-2 px-4 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200/50 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 active:scale-95";
+                    const pName = currentLanguage === 'en' ? matchedDiv.nameEn : matchedDiv.nameSi;
+                    parentBtn.innerHTML = `
+                        <i class="fa-solid fa-building-shield"></i>
+                        <span>${pName}</span>
+                    `;
+                    parentBtn.onclick = () => {
+                        selectMatchedItem(matchedDiv);
+                    };
+                    parentBadgeTarget.appendChild(parentBtn);
+                }
+            } else {
+                // It is a territorial division itself
+                document.getElementById('card-label-type').textContent = i18n[currentLanguage].policeDivision;
+                parentSection.classList.add('hidden');
+                constituentSection.classList.remove('hidden');
+
+                const badgesTarget = document.getElementById('constituent-stations-badges-target');
+                badgesTarget.innerHTML = '';
+
+                // Populate stations list
+                targetItem.stationsEn.forEach((stEn, idx) => {
+                    const stSi = targetItem.stationsSi[idx] || stEn;
+                    
+                    // Match the concrete station item for deep linking
+                    const resolvedSt = searchableItems.find(x => x.type === 'station' && x.nameEn === stEn);
+                    
+                    const badge = document.createElement('button');
+                    badge.className = "bg-slate-50 hover:bg-blue-50 border border-slate-200/60 hover:border-blue-300 text-slate-700 hover:text-blue-800 transition py-1.5 px-3 rounded-xl text-xs font-semibold flex items-center space-x-1.5 active:scale-95";
+                    
+                    const localizedStationName = currentLanguage === 'en' ? stEn : stSi;
+                    badge.innerHTML = `
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                        <span>${localizedStationName}</span>
+                    `;
+                    
+                    if (resolvedSt) {
+                        badge.onclick = () => {
+                            selectMatchedItem(resolvedSt);
+                        };
+                    }
+
+                    badgesTarget.appendChild(badge);
+                });
+            }
+
+            // Sync user input field state
+            document.getElementById('search-input').value = displayName;
             document.getElementById('suggestions-box').classList.add('hidden');
             document.getElementById('clear-btn').classList.remove('hidden');
 
-            // Scroll beautifully down to card viewer for Ammi
+            // Scroll down smoothly to the card details area for Ammi
             detailsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        // Quick Browse Suggestions loader (Popular/Easy taps)
+        // Quick browse buttons loader
         function populateQuickBrowse() {
             const container = document.getElementById('popular-suggestions-container');
             container.innerHTML = '';
 
-            // Selected set of key divisions to tap instantly
-            const popularIds = [4, 11, 1, 17, 22, 32, 42]; 
-            const popular = policeDivisions.filter(d => popularIds.includes(d.id));
+            // Core suggest options (including Mattala Station!)
+            const targetPopularEn = ["Mattala", "Nugegoda", "Mirihana", "Kandy", "Colombo Central", "Jaffna", "Galle"];
 
-            popular.forEach(div => {
-                const btn = document.createElement('button');
-                btn.className = "py-2 px-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 rounded-full text-xs font-bold transition flex items-center space-x-1.5 active:scale-95";
-                const label = currentLanguage === 'en' ? div.nameEn : div.nameSi;
-                btn.innerHTML = `
-                    <i class="fa-solid fa-hashtag text-slate-300 text-[10px]"></i>
-                    <span>${label}</span>
-                `;
-                btn.onclick = () => {
-                    selectDivision(div);
-                };
-                container.appendChild(btn);
+            targetPopularEn.forEach(name => {
+                const foundItem = searchableItems.find(x => x.nameEn === name);
+                if (foundItem) {
+                    const btn = document.createElement('button');
+                    btn.className = "py-2 px-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-slate-700 hover:text-blue-700 rounded-full text-xs font-bold transition flex items-center space-x-1.5 active:scale-95";
+                    const label = currentLanguage === 'en' ? foundItem.nameEn : foundItem.nameSi;
+                    btn.innerHTML = `
+                        <i class="fa-solid fa-hashtag text-slate-300 text-[10px]"></i>
+                        <span>${label}</span>
+                    `;
+                    btn.onclick = () => {
+                        selectMatchedItem(foundItem);
+                    };
+                    container.appendChild(btn);
+                }
             });
         }
 
-        // Error message handler
         function showNoResultsStatus(show) {
             const container = document.getElementById('status-container');
             if (show) {
@@ -1195,14 +1275,13 @@
             }
         }
 
-        // Reset & clearing controls
         function clearSearch() {
             document.getElementById('search-input').value = '';
             document.getElementById('clear-btn').classList.add('hidden');
             document.getElementById('suggestions-box').classList.add('hidden');
             document.getElementById('division-details-card').classList.add('hidden');
             showNoResultsStatus(false);
-            selectedDivisionId = null;
+            activeSelectedItem = null;
         }
 
         function resetSearch() {
@@ -1210,19 +1289,23 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Clipboard Copying specifically written with standard legacy commands due to sandboxed iframe protections
+        // Copy item details using legacy execution commands safely across iframe environments
         function copyDetailsToClipboard() {
-            if (!selectedDivisionId) return;
-            const division = policeDivisions.find(d => d.id === selectedDivisionId);
-            if (!division) return;
+            if (!activeSelectedItem) return;
 
-            const text = `--- Sri Lanka Police Division Finder ---
-Division: ${division.nameEn} (${division.nameSi})
-District: ${division.districtEn} (${division.districtSi})
-Province: ${division.provinceEn} (${division.provinceSi})
-Stations: ${division.stationsEn.join(', ')}`;
+            let text = `--- Sri Lanka Police Finder ---\n`;
+            if (activeSelectedItem.type === 'station') {
+                text += `Type: Police Station\n`;
+                text += `Station Name: ${activeSelectedItem.nameEn} (${activeSelectedItem.nameSi})\n`;
+                text += `Parent Division: ${activeSelectedItem.divisionEn} (${activeSelectedItem.divisionSi})\n`;
+            } else {
+                text += `Type: Police Division\n`;
+                text += `Division Name: ${activeSelectedItem.nameEn} (${activeSelectedItem.nameSi})\n`;
+                text += `Stations List: ${activeSelectedItem.stationsEn.join(', ')}\n`;
+            }
+            text += `District: ${activeSelectedItem.districtEn} (${activeSelectedItem.districtSi})\n`;
+            text += `Province: ${activeSelectedItem.provinceEn} (${activeSelectedItem.provinceSi})\n`;
 
-            // Temporary DOM element to execute legacy copy
             const tempInput = document.createElement("textarea");
             tempInput.value = text;
             document.body.appendChild(tempInput);
@@ -1230,7 +1313,7 @@ Stations: ${division.stationsEn.join(', ')}`;
             document.execCommand("copy");
             document.body.removeChild(tempInput);
 
-            // Display Toast notification for Ammi
+            // Display Toast feedback
             showToast(i18n[currentLanguage].copierMessage);
         }
 
@@ -1248,56 +1331,53 @@ Stations: ${division.stationsEn.join(', ')}`;
             }, 2500);
         }
 
-        // UI Translation compiler
+        // Apply localization parameters over active HTML elements
         function updateUI() {
             const labels = i18n[currentLanguage];
 
-            // Update DOM headers
+            // Set Title text and description prompts
             document.getElementById('header-title').textContent = labels.title;
             document.getElementById('header-subtitle').textContent = currentLanguage === 'en' ? "For Ammi" : "අම්මි වෙනුවෙන්";
             
             document.getElementById('hero-title').textContent = labels.title;
             document.getElementById('hero-subtitle').textContent = labels.subtitle;
 
-            // Search input configurations
+            // Apply search bar instructions
             document.getElementById('search-input').placeholder = labels.searchPlaceholder;
 
-            // Popular directory header
+            // Translate emergency categories
             document.getElementById('quick-browse-title').textContent = labels.recentTitle;
             document.getElementById('emergency-title').textContent = labels.emergencyTitle;
 
-            // Detail Card labels
-            document.getElementById('card-label').textContent = labels.detailsHeading;
+            // Localize detailed block indicators
             document.getElementById('card-district-label').textContent = labels.district;
             document.getElementById('card-province-label').textContent = labels.province;
-            document.getElementById('card-stations-label').textContent = labels.stations;
+            document.getElementById('parent-division-title-label').textContent = labels.parentDivision;
+            document.getElementById('constituent-stations-title-label').textContent = labels.stations;
 
-            // Update Emergency items
+            // Apply quick dial descriptors
             document.getElementById('emp-119-label').textContent = currentLanguage === 'en' ? "Police Emergency" : "පොලිස් හදිසි";
             document.getElementById('emp-1990-label').textContent = currentLanguage === 'en' ? "Suwaseriya Ambulance" : "සුවසැරිය ගිලන් රථ";
             document.getElementById('emp-hq-label').textContent = currentLanguage === 'en' ? "Police Headquarters" : "පොලිස් මූලස්ථානය";
             document.getElementById('emp-hospital-label').textContent = currentLanguage === 'en' ? "National Hospital" : "කොළඹ ජාතික රෝහල";
 
-            // Status message
+            // Translate status prompts
             document.getElementById('status-message').textContent = labels.noResults;
 
-            // Toggle button language prompt
+            // Toggle language indicator
             document.getElementById('language-toggle-text').textContent = currentLanguage === 'en' ? "සිංහල" : "English";
 
-            // Small signature text watermark
+            // Footer dedication
             document.getElementById('dedication-watermark').innerHTML = `
                 <span>${labels.madeForAmmi}</span>
             `;
 
-            // Refresh directory suggestions tags
+            // Refresh recommendations listing
             populateQuickBrowse();
 
-            // Refresh selected details card if currently active
-            if (selectedDivisionId) {
-                const activeDiv = policeDivisions.find(d => d.id === selectedDivisionId);
-                if (activeDiv) {
-                    selectDivision(activeDiv);
-                }
+            // Refresh details cards dynamically
+            if (activeSelectedItem) {
+                selectMatchedItem(activeSelectedItem);
             }
         }
     </script>
